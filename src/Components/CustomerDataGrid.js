@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
 
 const columns = [
   { field: 'id', headerName: 'ID', width: 70 },
@@ -21,20 +22,50 @@ const rows = [
   { id: 4, customer: 'mukesh', lastSeen: '08/08/2020', orders: 0, totalSpent: '$0.00', latestPurchase: '', news: false, segment: 'Regular' },
   { id: 5, customer: 'rakexh', lastSeen: '08/08/2020', orders: 0, totalSpent: '$0.00', latestPurchase: '', news: true, segment: 'Regular' },
   { id: 6, customer: 'beerbal', lastSeen: '08/08/2020', orders: 0, totalSpent: '$0.00', latestPurchase: '', news: true, segment: 'Regular' },
-  
 ];
 
 function CustomerDataGrid() {
+  const [filter, setFilter] = useState("");
+
+  // Function to apply filter across multiple fields
+  const filteredRows = rows.filter((row) => {
+    const filterText = filter.toLowerCase();
+    return (
+      row.id.toString().includes(filterText) || // Filter by ID
+      row.customer.toLowerCase().includes(filterText) || // Filter by Customer Name
+      row.lastSeen.toLowerCase().includes(filterText) || // Filter by Last Seen
+      row.orders.toString().includes(filterText) || // Filter by Orders
+      row.totalSpent.toLowerCase().includes(filterText) || // Filter by Total Spent
+      row.latestPurchase.toLowerCase().includes(filterText) || // Filter by Latest Purchase
+      (row.news ? '✔️' : '❌').includes(filterText) || // Filter by News (True/False)
+      row.segment.toLowerCase().includes(filterText) // Filter by Segment
+    );
+  });
+  
+
   return (
-    <Box sx={{ height: 400, width: '70%',margin:'30px'}}>
+    <Box sx={{ height: 500, width: '70%', margin: '30px' }}>
       <h2 style={{ textAlign: 'center', margin: '20px' }}>Customer Data Grid</h2>
+      {/* Unified Filter Section */}
+      <TextField
+        label="Search"
+        variant="outlined"
+        fullWidth
+        margin="normal"
+        value={filter}
+        onChange={(e) => setFilter(e.target.value)}
+        sx={{ marginBottom: 2 }}
+      />
+      {/* Data Grid */}
       <DataGrid
-        rows={rows}
+        rows={filteredRows}
         columns={columns}
         pageSize={5}
         rowsPerPageOptions={[5]}
         checkboxSelection
         disableSelectionOnClick
+        disableColumnFilter // Disables the filter option in the column menu
+        disableColumnMenu // Removes column menu (filters, sorting, etc.)
       />
     </Box>
   );
