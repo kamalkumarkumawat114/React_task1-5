@@ -1,23 +1,36 @@
 import React, { useState } from 'react';
 
 function SumTwoNumbers() {
-  const [num1, setNum1] = useState("0");
-  const [num2, setNum2] = useState("0");
+  const [num1, setNum1] = useState("");
+  const [num2, setNum2] = useState("");
   const [sum, setSum] = useState(null);
   const [disabled, setDisabled] = useState(false);
 
   const handleNum1Change = (e) => {
-    setNum1(e.target.value);
+    let value = e.target.value;
+    if (validateInput(value)) {
+      setNum1(value);
+    }
   };
 
   const handleNum2Change = (e) => {
-    setNum2(e.target.value);
+    let value = e.target.value;
+    if (validateInput(value)) {
+      setNum2(value);
+    }
+  };
+
+  const validateInput = (value) => {
+    // Allow only one optional "-" at the beginning followed by numbers
+    // Disallow any spaces
+    const regex = /^-?\d*\.?\d*$/;
+    return regex.test(value);
   };
 
   const calculateSum = () => {
     if (!disabled) {
-      const number1 = parseFloat(num1) || 0; 
-      const number2 = parseFloat(num2) || 0; 
+      const number1 = parseFloat(num1) || 0;
+      const number2 = parseFloat(num2) || 0;
       setSum(number1 + number2);
     }
   };
@@ -33,13 +46,14 @@ function SumTwoNumbers() {
         type="text"
         value={num1}
         onChange={handleNum1Change}
-        placeholder="Enter first number"
+      
       />
+      
       <input
         type="text"
         value={num2}
         onChange={handleNum2Change}
-        placeholder="Enter second number"
+        
       />
       <button onClick={calculateSum} disabled={disabled}>Calculate</button>
       <button onClick={toggleDisable}>
