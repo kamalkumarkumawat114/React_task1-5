@@ -1,26 +1,53 @@
-import React from 'react'
-import { useState } from 'react';
+import React, { useState } from 'react';
 
+function SumTwoNumbers() {
+  const [num1, setNum1] = useState("0");
+  const [num2, setNum2] = useState("0");
+  const [sum, setSum] = useState(null);
+  const [disabled, setDisabled] = useState(false);
 
-const Calculator = () => {
-    const [num1, setNum1] = useState(0);
-    const [num2, setNum2] = useState(0);
+  const handleNum1Change = (e) => {
+    setNum1(e.target.value);
+  };
+
+  const handleNum2Change = (e) => {
+    setNum2(e.target.value);
+  };
+
+  const calculateSum = () => {
+    if (!disabled) {
+      const number1 = parseFloat(num1) || 0; 
+      const number2 = parseFloat(num2) || 0; 
+      setSum(number1 + number2);
+    }
+  };
+
+  const toggleDisable = () => {
+    setDisabled(!disabled);
+  };
+
   return (
     <div className="section">
-        <h2>Sum of Two Numbers</h2>
-        <input
-          type="number"
-          value={num1}
-          onChange={(e) => setNum1(+e.target.value)}
-        />
-        <input
-          type="number"
-          value={num2}
-          onChange={(e) => setNum2(+e.target.value)}
-        />
-        <p>Sum: {num1 + num2}</p>
-      </div>
-  )
+      <h1>Sum of Two Numbers</h1>
+      <input
+        type="text"
+        value={num1}
+        onChange={handleNum1Change}
+        placeholder="Enter first number"
+      />
+      <input
+        type="text"
+        value={num2}
+        onChange={handleNum2Change}
+        placeholder="Enter second number"
+      />
+      <button onClick={calculateSum} disabled={disabled}>Calculate</button>
+      <button onClick={toggleDisable}>
+        {disabled ? 'Enable' : 'Disable'} Calculate
+      </button>
+      {sum !== null && <p>Sum: {sum}</p>}
+    </div>
+  );
 }
 
-export default Calculator
+export default SumTwoNumbers;
